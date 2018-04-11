@@ -1,0 +1,17 @@
+{
+  "name": "rainlands-landing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "less": "^3.0.1",
+    "parcel-bundler": "1.6"
+  },
+  "dependencies": {
+    "three": "^0.91.0"
+  },
+  "scripts": {
+    "start": "npx parcel src/index.html",
+    "build": "npx parcel build ./src/index.html --out-dir . --public-url ."
+  }
+}
