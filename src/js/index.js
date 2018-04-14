@@ -1,65 +1,36 @@
-const container = document.querySelector('#rain-root');
+require('./rain')
+require('./fog')
 
 const getRandomInt = (min, max) =>
   Math.random() * (max - min) + min;
 
-const createRainDrop = () => {
-  const rainDrop = document.createElement('div');
-  const { innerWidth } = window;
+const container = document.querySelector('#root');
 
-  rainDrop.className = 'rainDrop';
-  rainDrop.style.left = getRandomInt(0 - innerWidth / 2, window.innerWidth + window.innerWidth / 2) + 'px';
-
-  const size = getRandomInt(2, 5) + 'px';
-
-  rainDrop.style.width = size;
-  rainDrop.style.height = size;
-
-  return rainDrop;
-};
-
-const animateRainDrops = (rainDrops, speed, angle) => {
-  rainDrops.forEach((drop, index) => {
-    const { translateX = 0, translateY = 0 } = drop.transform;
-
-    drop.domElement.style.transform = `
-      translateX(${translateX}px)
-      translateY(${translateY}px)
+const makeLightning = () => {
+  setTimeout(() => {
+    container.style.transition = '0.1s';
+    container.style.opacity = 0.9;
+    container.style.filter = 'brightness(1.1) contrast(0.9) invert(0.1) blur(1px)';
+    container.style.transform = `
+      scale(1.02)
     `;
+    setTimeout(() => {
+      container.style.filter = 'none';
+      container.style.opacity = 0.5;
+      container.style.transition = '3s';
 
-    drop.transform.translateY += drop.speed * speed;
-    drop.transform.translateX += angle * drop.speed * speed;
+      setTimeout(() => {
+        container.style.opacity = 1;
+        container.style.transform = `
+          scale(1)
+        `;
 
-    if (translateY > window.innerHeight || translateX > window.innerWidth + window.innerWidth / 2) {
-      drop.domElement.remove();
-      rainDrops.splice(index, 1);
-    }
-  });
+        setTimeout(makeLightning, getRandomInt(10000, 30000));
+      }, getRandomInt(50, 150));
+    }, getRandomInt(250, 750));
+  }, getRandomInt(500, 1500));
 }
 
-let rainDrops = [];
-let rainDropSpeed = 15;
-let rainAngle = 0.5;
 
-const addNewDropsRecursively = () => {
-  const rainDrop = createRainDrop();
-
-  container.appendChild(rainDrop);
-
-  rainDrops.push({
-    transform: {
-      translateX: 0,
-      translateY: 0,
-    },
-    speed: getRandomInt(1, 2),
-    domElement: rainDrop
-  });
-
-  setTimeout(addNewDropsRecursively, getRandomInt(0, 20));
-}
-
-addNewDropsRecursively();
-
-setInterval(() => {
-  animateRainDrops(rainDrops, rainDropSpeed, rainAngle);
-}, 1000 / 30);
+makeLightning();
+// setTimeout(makeLightning, 100);
